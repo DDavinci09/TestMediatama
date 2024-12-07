@@ -26,6 +26,31 @@ class modelArticle extends CI_Model
 
     return $query->result_array();
   }
+  
+  public function getRandom($limit) 
+  {
+    $this->db->select('
+        articles.id AS article_id,
+        articles.title,
+        articles.content,
+        authors.name AS author_name,
+        GROUP_CONCAT(DISTINCT categories.name) AS categories,
+        GROUP_CONCAT(DISTINCT tags.name) AS tags
+    ');
+    
+    $this->db->from('articles');
+    $this->db->join('authors', 'articles.author_id = authors.id');
+    $this->db->join('article_category', 'articles.id = article_category.article_id', 'left');
+    $this->db->join('categories', 'article_category.category_id = categories.id', 'left');
+    $this->db->join('article_tag', 'articles.id = article_tag.article_id', 'left');
+    $this->db->join('tags', 'article_tag.tag_id = tags.id', 'left');
+    $this->db->order_by('RAND()'); 
+    $this->db->limit($limit); ;
+    $this->db->group_by('articles.id');
+    $query = $this->db->get();
+
+    return $query->result_array();
+  }
 
   public function getArticleId($id)
   {
@@ -114,7 +139,101 @@ class modelArticle extends CI_Model
     return $this->db->trans_status();
 }
 
-  
+public function get_articles_with_details() {
+        $this->db->select('
+            articles.id as article_id, 
+            articles.title, 
+            articles.content, 
+            authors.name as author_name, 
+            authors.email as author_email
+        ');
+        $this->db->from('articles');
+        $this->db->join('authors', 'articles.author_id = authors.id', 'left');
+        $query = $this->db->get();
+
+        $articles = $query->result_array();
+
+        // Menambahkan kategori dan tag untuk setiap artikel
+        foreach ($articles as &$article) {
+            $article['categories'] = $this->get_categories_by_article($article['article_id']);
+            $article['tags'] = $this->get_tags_by_article($article['article_id']);
+        }
+
+        return $articles;
+    }
+
+    private function get_categories_by_article($article_id) {
+        $this->db->select('categories.name');
+        $this->db->from('article_category');
+        $this->db->join('categories', 'article_category.category_id = categories.id', 'left');
+        $this->db->where('article_category.article_id', $article_id);
+        $query = $this->db->get();
+
+        return array_column($query->result_array(), 'name'); // Mengambil array nama kategori
+    }
+
+    private function get_tags_by_article($article_id) {
+        $this->db->select('tags.name');
+        $this->db->from('article_tag');
+        $this->db->join('tags', 'article_tag.tag_id = tags.id', 'left');
+        $this->db->where('article_tag.article_id', $article_id);
+        $query = $this->db->get();
+
+        return array_column($query->result_array(), 'name'); // Mengambil array nama tag
+    }
+
+public function getArticlesByCategory($category_id) {
+    // Menyusun query untuk mengambil artikel yang terkait dengan kategori
+    $this->db->select('
+        articles.id AS article_id,
+        articles.title,
+        articles.content,
+        authors.name AS author_name,
+        GROUP_CONCAT(DISTINCT categories.name) AS categories,
+        GROUP_CONCAT(DISTINCT tags.name) AS tags
+    ');
+    
+    $this->db->from('articles');
+    $this->db->join('authors', 'articles.author_id = authors.id');
+    $this->db->join('article_category', 'articles.id = article_category.article_id', 'left');
+    $this->db->join('categories', 'article_category.category_id = categories.id', 'left');
+    $this->db->join('article_tag', 'articles.id = article_tag.article_id', 'left');
+    $this->db->join('tags', 'article_tag.tag_id = tags.id', 'left');
+    
+    // Filter berdasarkan ID kategori
+    $this->db->where('article_category.category_id', $category_id);
+    
+    // Mengelompokkan berdasarkan artikel untuk memastikan data unik
+    $this->db->group_by('articles.id');
+    
+    // Menjalankan query
+    $query = $this->db->get();
+
+    // Mengembalikan hasil query sebagai array
+    return $query->result_array();
+}
+
+public function getArticleById($id) {
+    $this->db->select('
+        articles.id AS article_id,
+        articles.title,
+        articles.content,
+        authors.name AS author_name,
+        GROUP_CONCAT(DISTINCT categories.name) AS categories,
+        GROUP_CONCAT(DISTINCT tags.name) AS tags
+    ');
+    $this->db->from('articles');
+    $this->db->join('authors', 'articles.author_id = authors.id');
+    $this->db->join('article_category', 'articles.id = article_category.article_id', 'left');
+    $this->db->join('categories', 'article_category.category_id = categories.id', 'left');
+    $this->db->join('article_tag', 'articles.id = article_tag.article_id', 'left');
+    $this->db->join('tags', 'article_tag.tag_id = tags.id', 'left');
+    $this->db->where('articles.id', $id);
+    $this->db->group_by('articles.id');
+    
+    $query = $this->db->get();
+    return $query->row_array(); // Mengembalikan data satu baris
+}
 
 
 

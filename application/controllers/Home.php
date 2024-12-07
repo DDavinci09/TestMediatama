@@ -5,31 +5,30 @@ class Home extends CI_Controller {
 		
 	public function index()
 	{
-		$data['produk'] = $this->modelProduk->getAll();
+		$data['articles'] = $this->modelArticle->getAll();
+		$data['categories'] = $this->modelCategory->getAll();
+		$data['random1'] = $this->modelArticle->getRandom(1);
+		$data['random2'] = $this->modelArticle->getRandom(1);
+		$data['random3'] = $this->modelArticle->getRandom(2);
 
-		$this->load->view('layoutHome/header', $data);
-		$this->load->view('layoutHome/navbar', $data);
 		$this->load->view('home/index', $data);
-		$this->load->view('layoutHome/footer', $data);
 	}
 	
-	public function shop()
-	{
-		$data['produk'] = $this->modelProduk->getAll();
+	public function category($category_id) {
+		$data['articles'] = $this->modelArticle->getArticlesByCategory($category_id);
+        $data['categoryId'] = $this->modelCategory->getCategoryById($category_id);
+		$data['categories'] = $this->modelCategory->getAll();
 
-		$this->load->view('layoutHome/header', $data);
-		$this->load->view('layoutHome/navbar', $data);
-		$this->load->view('home/shop', $data);
-		$this->load->view('layoutHome/footer', $data);
+        $this->load->view('home/category', $data);
+    }
+
+	public function article($id) {
+		$data['article'] = $this->modelArticle->getArticleById($id);
+		$data['categories'] = $this->modelCategory->getAll();
+		
+		$this->load->view('home/article', $data);
 	}
+
 	
-	public function produk($id_produk)
-	{
-		$data['item'] = $this->modelProduk->getProdukId($id_produk);
-
-		$this->load->view('layoutHome/header', $data);
-		$this->load->view('layoutHome/navbar', $data);
-		$this->load->view('home/produk', $data);
-		$this->load->view('layoutHome/footer', $data);
-	}
+	
 }

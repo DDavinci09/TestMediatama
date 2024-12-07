@@ -59,6 +59,9 @@
                             <a class="btn btn-warning btn-sm"
                                 href="<?= base_url() ?>Admin/editArticle/<?= $article['article_id']; ?>"><i
                                     class="fa fa-edit"></i></a>
+                            <a class="btn btn-info btn-sm"
+                                href="<?= base_url() ?>Admin/detailArticle/<?= $article['article_id'] ?>"><i
+                                    class="fa fa-eye"></i></a>
                             <a href="<?= base_url('admin/deleteArticle/' . $article['article_id']); ?>"
                                 class="btn btn-danger btn-sm"
                                 onclick="return confirm('Are you sure you want to delete this article?');"><i

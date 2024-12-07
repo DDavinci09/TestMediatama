@@ -179,51 +179,37 @@ class Admin extends CI_Controller {
     redirect('admin/v_article');
 }
 
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	public function v_tag()
-	{
-		$data['title'] = "Tags";
-		$data['tag'] = $this->modelTag->getAll();
-
+public function detailArticle($id) {
+	$data['title'] = "Detail Articles";
+		$data['article'] = $this->modelArticle->getArticleById($id);
+		$data['categories'] = $this->modelCategory->getAll();
+		
 		$this->load->view('layoutDashboard/header', $data);
 		$this->load->view('layoutDashboard/navbar', $data);
 		$this->load->view('layoutDashboard/sidebar', $data);
-		$this->load->view('tag/index', $data);
-		$this->load->view('layoutDashboard/footer', $data);
-	}
-	
-	public function v_category()
-	{
-		$data['title'] = "Category";
-		$data['category'] = $this->modelCategory->getAll();
-
-		$this->load->view('layoutDashboard/header', $data);
-		$this->load->view('layoutDashboard/navbar', $data);
-		$this->load->view('layoutDashboard/sidebar', $data);
-		$this->load->view('category/index', $data);
+		$this->load->view('article/detail', $data);
 		$this->load->view('layoutDashboard/footer', $data);
 	}
 
+
+
 	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
 }

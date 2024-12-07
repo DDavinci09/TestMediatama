@@ -28,7 +28,7 @@
                                     cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                            <th>No</th>
                                             <th>Name</th>
                                             <th>Email</th>
                                         </tr>
@@ -49,7 +49,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6">
+                <div class="col-lg-6 col-md-12 col-sm-12">
                     <!-- Tabel Categories -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
@@ -61,7 +61,7 @@
                                     cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
+                                            <th>No</th>
                                             <th>Category Name</th>
                                         </tr>
                                     </thead>
@@ -78,7 +78,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-6">
+                <div class="col-lg-6 col-md-12 col-sm-12">
                     <!-- Tabel Tags -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
