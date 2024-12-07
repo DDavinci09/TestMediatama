@@ -1,30 +1,38 @@
-<!-- Control Sidebar -->
-<aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-</aside>
-<!-- /.control-sidebar -->
-
-<!-- Main Footer -->
-<footer class="main-footer">
-    <!-- To the right -->
-    <div class="float-right d-none d-sm-inline">
-        Anything you want
-    </div>
-    <!-- Default to the left -->
-    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights
-    reserved.
-</footer>
 </div>
-<!-- ./wrapper -->
 
-<!-- REQUIRED SCRIPTS -->
+<footer class="footer mt-5">
+    <div class="footer-container">
+        <div class="footer-section brand">
+            <h2 class="title">The News Dispatch</h2>
+            <p>Your daily dose of news delivered with style.</p>
+            <div class="social-icons">
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+        </div>
+        <div class="footer-section links">
+            <h3>Quick Links</h3>
+            <ul>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Authors</a></li>
+                <li><a href="#">Archive</a></li>
+                <li><a href="#">Terms and Conditions</a></li>
+                <li><a href="#">Cookie Policy</a></li>
+            </ul>
+        </div>
+        <div class="footer-section contact">
+            <h3>Contact Us</h3>
+            <p>Email: info@newsdispatch.com</p>
+            <p>Phone: +123 456 789</p>
+            <p>Address: 123 News St., Dispatch City</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2024 Uizard News. All rights reserved.</p>
+    </div>
+</footer>
 
-<!-- jQuery -->
-<script src="<?= base_url('assets'); ?>/plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="<?= base_url('assets'); ?>/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- AdminLTE App -->
-<script src="<?= base_url('assets'); ?>/dist/js/adminlte.min.js"></script>
 </body>
 
 </html>

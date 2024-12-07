@@ -9,80 +9,29 @@ class modelTag extends CI_Model
     return $this->db->get('tags')->result_array();
   }
 
-  public function getProdukId($id_produk)
-  {
-    return $this->db->get_where('produk', ['id_produk' => $id_produk])->row_array();
-  }
-
-  public function tambah()
+  public function insert()
   {
     $data = [
-      "id_kategori" => $this->input->post('id_kategori', true),
-      "nama_produk" => $this->input->post('nama_produk', true),
-      "harga_produk" => $this->input->post('harga_produk', true),
-      "stok_produk" => $this->input->post('stok_produk', true),
-      "keterangan_produk" => $this->input->post('keterangan_produk', true),
-      "create_at" => date('Y-m-d H:i:s'),
-      "rating_produk" => 0
+      "name" => $this->input->post('name', true)
     ];
 
-    $this->db->insert('produk', $data);
+    $this->db->insert('tags', $data);
   }
 
-  public function tambahfile($file)
+  public function update()
   {
     $data = [
-      "id_kategori" => $this->input->post('id_kategori', true),
-      "nama_produk" => $this->input->post('nama_produk', true),
-      "harga_produk" => $this->input->post('harga_produk', true),
-      "stok_produk" => $this->input->post('stok_produk', true),
-      "keterangan_produk" => $this->input->post('keterangan_produk', true),
-      "create_at" => date('Y-m-d H:i:s'),
-      "image" => $file['file_name'],
-      "rating_produk" => 0
+      "name" => $this->input->post('name', true)
     ];
 
-    $this->db->insert('produk', $data);
-  }
-  
-  public function editfile($id_produk, $newFile)
-  {
-    $data = [
-      "id_kategori" => $this->input->post('id_kategori', true),
-      "nama_produk" => $this->input->post('nama_produk', true),
-      "harga_produk" => $this->input->post('harga_produk', true),
-      "stok_produk" => $this->input->post('stok_produk', true),
-      "keterangan_produk" => $this->input->post('keterangan_produk', true),
-      "create_at" => date('Y-m-d H:i:s'),
-      "image" => $newFile,
-      "rating_produk" => 0
-    ];
-
-    $this->db->where('id_produk', $id_produk);
-    $this->db->update('produk', $data);
-  }
-  
-  public function edit($id_produk)
-  {
-    $data = [
-      "id_kategori" => $this->input->post('id_kategori', true),
-      "nama_produk" => $this->input->post('nama_produk', true),
-      "harga_produk" => $this->input->post('harga_produk', true),
-      "stok_produk" => $this->input->post('stok_produk', true),
-      "keterangan_produk" => $this->input->post('keterangan_produk', true),
-      "create_at" => date('Y-m-d H:i:s'),
-      "rating_produk" => 0
-    ];
-
-    $this->db->where('id_produk', $id_produk);
-    $this->db->update('produk', $data);
+    $this->db->where('id', $this->input->post('id', true));
+    $this->db->update('tags', $data);
   }
 
-  public function hapus($id_produk)
+  public function delete($id)
   {
-    $this->db->delete('produk', ['id_produk' => $id_produk]);
-  }
-  
-  
+    $this->db->where('id', $id);
+    return $this->db->delete('tags');
+  }  
 
 }

@@ -31,11 +31,10 @@
                 </li>
                 <li class="nav-header">Logout</li>
                 <li class="nav-item">
-                    <a href="pages/kanban.html" class="nav-link">
+                    <a href="<?= base_url('auth/logout'); ?>" class="nav-link"
+                        onclick="return confirm('Are you sure you want to logout?');">
                         <i class="nav-icon fas fa-columns"></i>
-                        <p>
-                            Logout
-                        </p>
+                        <p>Logout</p>
                     </a>
                 </li>
             </ul>

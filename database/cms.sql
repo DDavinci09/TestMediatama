@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 06, 2024 at 01:50 PM
+-- Generation Time: Dec 07, 2024 at 12:39 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -41,7 +41,9 @@ CREATE TABLE `articles` (
 INSERT INTO `articles` (`id`, `title`, `content`, `author_id`) VALUES
 (1, 'Laravel for Beginners', 'A beginner\'s guide to Laravel', 1),
 (2, 'PHP for Advanced Users', 'Advanced PHP programming', 2),
-(3, 'Introduction to MVC', 'Basic MVC concepts in PHP', 1);
+(3, 'Introduction to MVC', 'Basic MVC concepts in PHP', 1),
+(7, 'Programing Web', 'Dasar pemrograman web', 3),
+(8, 'Framework Laravel', 'Cara menggunakan Framewrok Laravel', 3);
 
 -- --------------------------------------------------------
 
@@ -61,7 +63,9 @@ CREATE TABLE `article_category` (
 INSERT INTO `article_category` (`article_id`, `category_id`) VALUES
 (1, 1),
 (2, 1),
-(3, 2);
+(7, 1),
+(3, 2),
+(8, 3);
 
 -- --------------------------------------------------------
 
@@ -80,9 +84,16 @@ CREATE TABLE `article_tag` (
 
 INSERT INTO `article_tag` (`article_id`, `tag_id`) VALUES
 (1, 1),
+(7, 1),
+(8, 1),
 (1, 2),
 (2, 2),
-(3, 3);
+(3, 2),
+(7, 2),
+(8, 2),
+(3, 3),
+(7, 3),
+(8, 5);
 
 -- --------------------------------------------------------
 
@@ -102,7 +113,8 @@ CREATE TABLE `authors` (
 
 INSERT INTO `authors` (`id`, `name`, `email`) VALUES
 (1, 'John Doe', 'johndoe@email.com'),
-(2, 'Jane Smith', 'janesmith@email.com');
+(2, 'Jane Smith', 'janesmith@email.com'),
+(3, 'Derry', 'Derry@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -122,7 +134,8 @@ CREATE TABLE `categories` (
 INSERT INTO `categories` (`id`, `name`) VALUES
 (1, 'Programming'),
 (2, 'Technology'),
-(3, 'Framework');
+(3, 'Framework'),
+(5, 'Android');
 
 -- --------------------------------------------------------
 
@@ -142,7 +155,8 @@ CREATE TABLE `tags` (
 INSERT INTO `tags` (`id`, `name`) VALUES
 (1, 'Laravel'),
 (2, 'PHP'),
-(3, 'CodeIgniter');
+(3, 'CodeIgniter'),
+(5, 'Javascript');
 
 --
 -- Indexes for dumped tables
@@ -195,25 +209,25 @@ ALTER TABLE `tags`
 -- AUTO_INCREMENT for table `articles`
 --
 ALTER TABLE `articles`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `authors`
 --
 ALTER TABLE `authors`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `categories`
 --
 ALTER TABLE `categories`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tags`
 --
 ALTER TABLE `tags`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Constraints for dumped tables

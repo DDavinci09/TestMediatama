@@ -3,29 +3,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Admin extends CI_Controller {
 
-	public function index()
-{
-    $data['title'] = "Dashboard";
-    $data['authors'] = $this->modelAuthor->getAll();
-    $data['categories'] = $this->modelCategory->getAll();
-    $data['tags'] = $this->modelTag->getAll();
-
-    $this->load->view('layoutDashboard/header', $data);
-    $this->load->view('layoutDashboard/navbar', $data);
-    $this->load->view('layoutDashboard/sidebar', $data);
-    $this->load->view('dashboard/index', $data);
-    $this->load->view('layoutDashboard/footer', $data);
-}
+	public function __construct()
+    {
+        parent::__construct();
+        
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth');
+        }
+    }
 	
-	public function v_author()
+	public function index()
 	{
-		$data['title'] = "Authors";
-		$data['author'] = $this->modelAuthor->getAll();
+		$data['title'] = "Dashboard";
+		$data['authors'] = $this->modelAuthor->getAll();
+		$data['categories'] = $this->modelCategory->getAll();
+		$data['tags'] = $this->modelTag->getAll();
 
 		$this->load->view('layoutDashboard/header', $data);
 		$this->load->view('layoutDashboard/navbar', $data);
 		$this->load->view('layoutDashboard/sidebar', $data);
-		$this->load->view('author/index', $data);
+		$this->load->view('dashboard/index', $data);
 		$this->load->view('layoutDashboard/footer', $data);
 	}
 	
@@ -55,10 +52,8 @@ class Admin extends CI_Controller {
 		$this->load->view('layoutDashboard/footer', $data);
     }
 
-	// Menyimpan artikel baru
     public function save() 
 	{
-        // Validasi input
 		$this->form_validation->set_rules('title', 'Title', 'required|min_length[3]|max_length[255]');
 		$this->form_validation->set_rules('content', 'Content', 'required|min_length[10]');
         $this->form_validation->set_rules('author_id', 'Author', 'required');
@@ -71,35 +66,29 @@ class Admin extends CI_Controller {
         if ($this->form_validation->run() == FALSE) {			
             $this->addArticle();
         } else {
-            // Ambil data dari form
             $title = $this->input->post('title', TRUE);
             $content = $this->input->post('content', TRUE);
             $author_id = $this->input->post('author_id', TRUE);
             $category_id = $this->input->post('category', TRUE);
-            $tags = $this->input->post('tags', TRUE); // Array tags yang dipilih
+            $tags = $this->input->post('tags', TRUE);
 
-            // Menyimpan artikel baru ke database
             $data = [
                 'title' => $title,
                 'content' => $content,
-                'author_id' => $author_id // Misalnya ID penulis di-set manual, bisa disesuaikan
+                'author_id' => $author_id
             ];
             $this->modelArticle->insert_article($data);
 
-            // Ambil ID artikel yang baru disimpan
             $article_id = $this->db->insert_id();
 
-            // Menyimpan relasi antara artikel dan kategori
             $this->modelArticle->insert_article_category($article_id, $category_id);
 
-            // Menyimpan relasi antara artikel dan tag
             if (!empty($tags)) {
                 foreach ($tags as $tag_id) {
                     $this->modelArticle->insert_article_tag($article_id, $tag_id);
                 }
             }
 
-            // Redirect ke halaman daftar artikel setelah berhasil
 			$this->session->set_flashdata('success', 'Article added successfully!');
             redirect('admin/v_article');
         }
@@ -124,7 +113,6 @@ class Admin extends CI_Controller {
 
 	public function updateArticle($id)
 	{
-		// Validasi input form
 		$this->form_validation->set_rules('title', 'Title', 'required|min_length[3]|max_length[255]');
 		$this->form_validation->set_rules('content', 'Content', 'required|min_length[10]');
 		$this->form_validation->set_rules('author_id', 'Author', 'required');
@@ -133,54 +121,48 @@ class Admin extends CI_Controller {
 			'required' => 'You must select at least one tag.'
 		]);
 
-		// Cek validasi
 		if ($this->form_validation->run() === FALSE) {
 			$this->editArticle($id);
 		} else {
-			// Ambil data dari form
 			$title = $this->input->post('title', TRUE);
 			$content = $this->input->post('content', TRUE);
 			$author_id = $this->input->post('author_id', TRUE);
 			$category_id = $this->input->post('category_id', TRUE);
-			$tags = $this->input->post('tags', TRUE); // Array tag yang dipilih
+			$tags = $this->input->post('tags', TRUE);
 
-			// Data untuk update artikel
 			$article_data = [
 				'title' => $title,
 				'content' => $content,
 				'author_id' => $author_id
 			];
 
-			// Update tabel articles
 			$this->modelArticle->update_article($id, $article_data);
 
-			// Update kategori artikel (hapus lama, simpan yang baru)
 			$this->modelArticle->update_article_category($id, $article_id, $category_id);
 
-			// Update tag artikel (hapus lama, simpan yang baru)
 			$this->modelArticle->update_article_tag($id, $tags);
 
-			// Redirect dengan pesan sukses
 			$this->session->set_flashdata('success', 'Article updated successfully!');
 			redirect('admin/v_article');
 		}
 	}
 	
-	public function deleteArticle($id) {
-    // Panggil fungsi model untuk menghapus artikel
-    $is_deleted = $this->modelArticle->delete_article($id);
+	public function deleteArticle($id) 
+	{
+		$is_deleted = $this->modelArticle->delete_article($id);
 
-    if ($is_deleted) {
-        $this->session->set_flashdata('success', 'Article deleted successfully!');
-    } else {
-        $this->session->set_flashdata('error', 'Failed to delete article. Please try again.');
-    }
+		if ($is_deleted) {
+			$this->session->set_flashdata('success', 'Article deleted successfully!');
+		} else {
+			$this->session->set_flashdata('error', 'Failed to delete article. Please try again.');
+		}
 
-    redirect('admin/v_article');
-}
+		redirect('admin/v_article');
+	}
 
-public function detailArticle($id) {
-	$data['title'] = "Detail Articles";
+	public function detailArticle($id) 
+	{
+		$data['title'] = "Detail Articles";
 		$data['article'] = $this->modelArticle->getArticleById($id);
 		$data['categories'] = $this->modelCategory->getAll();
 		
@@ -191,25 +173,129 @@ public function detailArticle($id) {
 		$this->load->view('layoutDashboard/footer', $data);
 	}
 
+	public function addAuthor()
+	{
+		$this->form_validation->set_rules('name', 'Name', 'required');
+		$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 
-
+		if ($this->form_validation->run() === FALSE) {
+			$this->session->set_flashdata('error', 'Author added failed!');
+			$this->index();
+		} else {
+			$this->modelAuthor->insert();
+			$this->session->set_flashdata('success', 'Author added successfully!');
+			redirect ('admin/index');
+		}		
+	}
 	
+	public function updateAuthor()
+	{
+		$this->form_validation->set_rules('name', 'Name', 'required');
+		$this->form_validation->set_rules('email', 'Email', 'required|valid_email');
 
+		if ($this->form_validation->run() === FALSE) {
+			$this->session->set_flashdata('error', 'Author update failed!');
+			$this->index();
+		} else {
+			$this->modelAuthor->update();
+			$this->session->set_flashdata('success', 'Author update successfully!');
+			redirect ('admin/index');
+		}		
+	}
+	
+	public function deleteAuthor($id)
+	{
+		$delete = $this->modelAuthor->delete($id);
 
+		if ($delete) {
+			$this->session->set_flashdata('success', 'Author deleted successfully!');
+		} else {
+			$this->session->set_flashdata('error', 'Failed to delete author!');
+		}
 
+		redirect('admin/index');		
+	}
+	
+	public function addCategory()
+	{
+		$this->form_validation->set_rules('name', 'Name', 'required');
 
+		if ($this->form_validation->run() === FALSE) {
+			$this->session->set_flashdata('error', 'Category added failed!');
+			$this->index();
+		} else {
+			$this->modelCategory->insert();
+			$this->session->set_flashdata('success', 'Category added successfully!');
+			redirect ('admin/index');
+		}		
+	}
 
+	public function updateCategory()
+	{
+		$this->form_validation->set_rules('name', 'Name', 'required');
 
+		if ($this->form_validation->run() === FALSE) {
+			$this->session->set_flashdata('error', 'Category update failed!');
+			$this->index();
+		} else {
+			$this->modelCategory->update();
+			$this->session->set_flashdata('success', 'Category update successfully!');
+			redirect ('admin/index');
+		}		
+	}
+	
+	public function deleteCategory($id)
+	{
+		$delete = $this->modelCategory->delete($id);
 
+		if ($delete) {
+			$this->session->set_flashdata('success', 'Category deleted successfully!');
+		} else {
+			$this->session->set_flashdata('error', 'Failed to delete Category!');
+		}
 
+		redirect('admin/index');		
+	}
+	
+	public function addTag()
+	{
+		$this->form_validation->set_rules('name', 'Name', 'required');
 
+		if ($this->form_validation->run() === FALSE) {
+			$this->session->set_flashdata('error', 'Tag added failed!');
+			$this->index();
+		} else {
+			$this->modelTag->insert();
+			$this->session->set_flashdata('success', 'Tag added successfully!');
+			redirect ('admin/index');
+		}		
+	}
 
+	public function updateTag()
+	{
+		$this->form_validation->set_rules('name', 'Name', 'required');
 
+		if ($this->form_validation->run() === FALSE) {
+			$this->session->set_flashdata('error', 'Tag update failed!');
+			$this->index();
+		} else {
+			$this->modelTag->update();
+			$this->session->set_flashdata('success', 'Tag update successfully!');
+			redirect ('admin/index');
+		}		
+	}
+	
+	public function deleteTag($id)
+	{
+		$delete = $this->modelTag->delete($id);
 
+		if ($delete) {
+			$this->session->set_flashdata('success', 'Tag deleted successfully!');
+		} else {
+			$this->session->set_flashdata('error', 'Failed to delete Tag!');
+		}
 
-
-
-
-
+		redirect('admin/index');		
+	}
 	
 }

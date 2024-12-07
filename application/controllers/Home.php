@@ -11,22 +11,33 @@ class Home extends CI_Controller {
 		$data['random2'] = $this->modelArticle->getRandom(1);
 		$data['random3'] = $this->modelArticle->getRandom(2);
 
+		$this->load->view('layoutHome/header', $data);
+		$this->load->view('layoutHome/navbar', $data);
 		$this->load->view('home/index', $data);
+		$this->load->view('layoutHome/footer', $data);
 	}
 	
-	public function category($category_id) {
+	public function category($category_id) 
+	{
 		$data['articles'] = $this->modelArticle->getArticlesByCategory($category_id);
         $data['categoryId'] = $this->modelCategory->getCategoryById($category_id);
 		$data['categories'] = $this->modelCategory->getAll();
 
+		$this->load->view('layoutHome/header', $data);
+		$this->load->view('layoutHome/navbar', $data);
         $this->load->view('home/category', $data);
+		$this->load->view('layoutHome/footer', $data);
     }
 
-	public function article($id) {
+	public function article($id) 
+	{
 		$data['article'] = $this->modelArticle->getArticleById($id);
 		$data['categories'] = $this->modelCategory->getAll();
 		
+		$this->load->view('layoutHome/header', $data);
+		$this->load->view('layoutHome/navbar', $data);
 		$this->load->view('home/article', $data);
+		$this->load->view('layoutHome/footer', $data);
 	}
 
 	

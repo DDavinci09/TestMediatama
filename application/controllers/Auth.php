@@ -1,37 +1,36 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Admin extends CI_Controller {
-
-	/**
-	 * Index Page for this controller.
-	 *
-	 * Maps to the following URL
-	 * 		http://example.com/index.php/welcome
-	 *	- or -
-	 * 		http://example.com/index.php/welcome/index
-	 *	- or -
-	 * Since this controller is set as the default controller in
-	 * config/routes.php, it's displayed at http://example.com/
-	 *
-	 * So any other public methods not prefixed with an underscore will
-	 * map to /index.php/welcome/<method_name>
-	 * @see https://codeigniter.com/userguide3/general/urls.html
-	 */
+class Auth extends CI_Controller {
+	
 	public function index()
 	{
-		$this->load->view('layoutDashboard/header');
-		$this->load->view('layoutDashboard/navbar');
-		$this->load->view('layoutDashboard/sidebar');
-		$this->load->view('layoutDashboard/index');
-		$this->load->view('layoutDashboard/footer');
+		$this->load->view('home/login');
 	}
-	
-	public function index2()
-	{
-		$this->load->view('layoutHome/header');
-		$this->load->view('layoutHome/navbar');
-		$this->load->view('layoutHome/index');
-		$this->load->view('layoutHome/footer');
-	}
+
+	public function login() 
+    {
+        $admin_data = [
+            'username' => 'admin',
+            'password' => 'admin123'
+        ];
+
+        $username = $this->input->post('username');
+        $password = $this->input->post('password');
+
+        if ($username === $admin_data['username'] && $password === $admin_data['password']) {
+            $this->session->set_userdata('logged_in', true);
+			$this->session->set_flashdata('success', 'Selamat Datang Admin');
+            redirect('admin/index');
+        } else {
+            $this->session->set_flashdata('error', 'Username atau Password salah.');
+            redirect('auth/index');
+        }
+    }
+
+	public function logout() 
+    {
+        $this->session->unset_userdata('logged_in');
+        redirect('home/index');
+    }
 }

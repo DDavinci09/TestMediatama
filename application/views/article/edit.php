@@ -79,9 +79,9 @@
                         <?= form_error('tags[]', '<div class="text-danger">', '</div>'); ?>
                     </div>
 
-                    <button type="submit" class="btn btn-primary">Update Article</button>
                 </div>
             </div>
+            <button type="submit" class="btn btn-primary">Update Article</button>
             <?php echo form_close(); ?>
 
         </div><!-- /.container-fluid -->
